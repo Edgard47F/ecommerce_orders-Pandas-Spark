@@ -1,0 +1,21 @@
+services:
+  jupyter:
+    build: .
+    container_name: spark-lab5-jupyter
+    ports:
+      - "8888:8888"    # Jupyter Lab
+      - "4040:4040"    # Spark UI
+      - "4041:4041"    # Spark UI (por si hay múltiples SparkContexts)
+    volumes:
+      - ./notebooks:/home/jovyan/work
+      - ./data:/home/jovyan/data
+      - ./scripts:/home/jovyan/scripts
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - GRANT_SUDO=yes
+      # Configuración de Spark para hacer más evidentes las diferencias
+      - SPARK_WORKER_MEMORY=2g
+      - SPARK_DRIVER_MEMORY=1g
+      # Configurar Spark con 5 executors/cores
+      - SPARK_MASTER=local[5]
+    command: start-notebook.sh --NotebookApp.token='' --NotebookApp.password=''
